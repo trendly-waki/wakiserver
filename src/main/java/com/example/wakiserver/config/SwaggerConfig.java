@@ -48,7 +48,6 @@ public class SwaggerConfig  extends WebMvcConfigurationSupport {
                 .apis(RequestHandlerSelectors.any())
                 .build();
     }
-
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Waki API")
