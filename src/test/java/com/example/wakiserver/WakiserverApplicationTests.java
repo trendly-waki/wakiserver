@@ -6,10 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class WakiserverApplicationTests {
     @Test
-    public void main(String[] args){
-
-    }
-    @Test
     void contextLoads() {
     }
 
