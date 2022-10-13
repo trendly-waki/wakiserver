@@ -4,6 +4,7 @@ import com.example.wakiserver.domain.user.Role;
 import com.example.wakiserver.domain.user.User;
 import com.example.wakiserver.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -34,7 +35,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         Role role = Role.ROLE_USER;
 
-        User byUsername = userRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다. : " + username));
 
         //DB에 없는 사용자라면 회원가입처리
         if(byUsername == null){

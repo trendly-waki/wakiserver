@@ -1,8 +1,7 @@
 package com.example.wakiserver.auth;
 
 import com.example.wakiserver.domain.user.User;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,8 +12,8 @@ import java.util.Map;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class PrincipalDetails implements UserDetails, OAuth2User {
-
     private User user;
     private Map<String, Object> attributes;
 
@@ -29,6 +28,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         this.user = user;
         this.attributes = attributes;
     }
+
 
     /**
      * UserDetails 구현
@@ -45,6 +45,10 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
             }
         });
         return collect;
+
+//        Collection<GrantedAuthority> collectors = new ArrayList<>();
+//        collectors.add(() -> "ROLE_"+user.getRole());
+//        return collectors;
     }
 
     /**

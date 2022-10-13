@@ -2,17 +2,16 @@ package com.example.wakiserver.web;
 
 import com.example.wakiserver.auth.PrincipalDetails;
 import com.example.wakiserver.domain.user.Role;
-
 import com.example.wakiserver.domain.user.User;
 import com.example.wakiserver.domain.user.UserRepository;
+import com.example.wakiserver.service.UserService;
+import com.example.wakiserver.web.dto.UserSaveDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,9 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserService userService;
 
     @GetMapping("/loginForm")
     public String loginForm(){
@@ -36,13 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute User user){
-        user.setRole(Role.ROLE_USER);
+    public String join(UserSaveDto userSaveDto){
 
-        String encodePwd = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodePwd);
-
-        userRepository.save(user);  //반드시 패스워드 암호화해야함
+        userService.join(userSaveDto);
         return "redirect:/loginForm";
     }
 
