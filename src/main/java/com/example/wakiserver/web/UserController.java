@@ -1,19 +1,28 @@
 package com.example.wakiserver.web;
 
+import com.example.wakiserver.auth.JwtTokenProvider;
 import com.example.wakiserver.auth.PrincipalDetails;
 import com.example.wakiserver.domain.user.Role;
 import com.example.wakiserver.domain.user.User;
 import com.example.wakiserver.domain.user.UserRepository;
+import com.example.wakiserver.response.ResponseException;
+import com.example.wakiserver.response.ResponseTemplate;
 import com.example.wakiserver.service.UserService;
+import com.example.wakiserver.web.dto.UserLoginDto;
 import com.example.wakiserver.web.dto.UserSaveDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.PermissionDeniedDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Controller
@@ -21,6 +30,8 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/loginForm")
     public String loginForm(){
@@ -57,6 +68,19 @@ public class UserController {
         return "admin";
     }
 
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseTemplate<String> login(@RequestBody UserLoginDto userLoginDto, HttpServletResponse response) throws ResponseException {
+        User user = userService.login(userLoginDto);
+        String userEmail = user.getEmail();
+        Role role = user.getRole();
+
+        String token = jwtTokenProvider.createToken(userEmail, role);
+        response.setHeader("JWT", token);
+
+        return new ResponseTemplate<>(token);
+    }
+
 
     // !!!! OAuth로 로그인 시 이 방식대로 하면 CastException 발생함
     @GetMapping("/form/loginInfo")
@@ -88,7 +112,7 @@ public class UserController {
         Map<String, Object> attributes1 = oAuth2UserPrincipal.getAttributes();
         // attributes == attributes1
 
-        return attributes.toString();     //세션에 담긴 user가져올 수 있음음
+        return attributes.toString();     //세션에 담긴 user가져올 수 있음
     }
 
 
@@ -105,6 +129,8 @@ public class UserController {
         }
         return result;
     }
+
+
 
 }
 

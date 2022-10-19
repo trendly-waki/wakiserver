@@ -35,18 +35,18 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         Role role = Role.ROLE_USER;
 
-        User byUsername = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다. : " + username));
+        User byEmail = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다. : " + email));
 
         //DB에 없는 사용자라면 회원가입처리
-        if(byUsername == null){
-            byUsername = User.oauth2Register()
+        if(byEmail == null){
+            byEmail = User.oauth2Register()
                     .username(username).password(password).email(email).role(role)
                     .provider(provider).providerId(providerId)
                     .build();
-            userRepository.save(byUsername);
+            userRepository.save(byEmail);
         }
 
-        return new PrincipalDetails(byUsername, oAuth2User.getAttributes());
+        return new PrincipalDetails(byEmail, oAuth2User.getAttributes());
     }
 }

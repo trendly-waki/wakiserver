@@ -14,11 +14,11 @@ public class PrincipalDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User byUsername = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다. " + username));
-        if (byUsername != null) {
-            return new PrincipalDetails(byUsername);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User byEmail= userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다. " + email));
+        if (byEmail != null) {
+            return new PrincipalDetails(byEmail);
         }
         return null;
     }
