@@ -69,6 +69,10 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return user.getUsername();
     }
 
+    public String getUserEmail(){
+        return user.getEmail();
+    }
+
     /**
      * UserDetails 구현
      * 계정 만료 여부

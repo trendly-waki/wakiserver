@@ -1,17 +1,16 @@
 package com.example.wakiserver.domain.user;
 
+import com.example.wakiserver.config.BaseTimeEntity;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Getter @ToString
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User {
+public class User extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,20 +24,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Setter
     private Role role;
-
-    @CreationTimestamp  //자동으로 만들어준다
-    private Timestamp createTime;
-
-    //nickname, profile,
-
+    private Long point;
     private String provider;    // oauth2를 이용할 경우 어떤 플랫폼을 이용하는지
     private String providerId;  // oauth2를 이용할 경우 아이디값
+    private String phoneNumber;
 
 
     @Builder(builderClassName = "UserDetailRegister", builderMethodName = "userDetailRegister")
-    public User(String username, String password, String email, Role role) {
+    public User(String username, String password, String phoneNumber, String email, Role role) {
         this.username = username;
         this.password = password;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
     }
@@ -51,5 +47,8 @@ public class User {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+    }
+    public void applyPoint(Long point){
+        this.point = point;
     }
 }

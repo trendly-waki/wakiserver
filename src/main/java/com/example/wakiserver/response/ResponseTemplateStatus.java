@@ -30,7 +30,7 @@ public enum ResponseTemplateStatus {
     private final int code;
     private final String message;
 
-    private ResponseTemplateStatus(boolean isSuccess, String message, int code) { //BaseResponseStatus 에서 각 해당하는 코드를 생성자로 맵핑
+    private ResponseTemplateStatus(boolean isSuccess, String message, int code) {
         this.isSuccess = isSuccess;
         this.code = code;
         this.message = message;
