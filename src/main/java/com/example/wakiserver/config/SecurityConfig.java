@@ -3,8 +3,6 @@ package com.example.wakiserver.config;
 import com.example.wakiserver.auth.JwtAuthenticationFilter;
 import com.example.wakiserver.auth.JwtTokenProvider;
 import com.example.wakiserver.auth.PrincipalOauth2UserService;
-import com.example.wakiserver.exception.CustomAccessDeniedHandler;
-import com.example.wakiserver.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -38,15 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().permitAll()
             .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and()
-                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+//                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//                .and()
+//               .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
 //                .logout()					// logout할 경우
 //                    .logoutUrl("/logout")			// 로그아웃을 처리할 URL 입력
 //                    .logoutSuccessUrl("/")	// 로그아웃 성공 시 "/"으로 이동
-               .and()
+//               .and()
                     .oauth2Login()				// OAuth2기반의 로그인인 경우
-                    .loginPage("/loginForm")		// 인증이 필요한 URL에 접근하면 /loginForm으로 이동
+//                    .loginPage("/loginForm")		// 인증이 필요한 URL에 접근하면 /loginForm으로 이동
                     .defaultSuccessUrl("/")			// 로그인 성공하면 "/" 으로 이동
                     .failureUrl("/loginForm")		// 로그인 실패 시 /loginForm으로 이동
                     .userInfoEndpoint()			// 로그인 성공 후 사용자정보를 가져온다

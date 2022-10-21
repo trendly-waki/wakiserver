@@ -4,6 +4,7 @@ import com.example.wakiserver.domain.report.Report;
 import lombok.Getter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 public class ReportResponseDto {
@@ -11,13 +12,13 @@ public class ReportResponseDto {
     private String mode;
     private Double avgSpeed;
     private Double topSpeed;
-    private Timestamp createdTime;
+    private LocalDateTime createdAt;
 
     public ReportResponseDto(Report entity){
         this.username = entity.getUser().getUsername();
         this.mode = entity.getMode();
         this.avgSpeed = entity.getAvgSpeed();
         this.topSpeed = entity.getTopSpeed();
-        this.createdTime = entity.getCreateTime();
+        this.createdAt = entity.getCreatedAt();
     }
 }

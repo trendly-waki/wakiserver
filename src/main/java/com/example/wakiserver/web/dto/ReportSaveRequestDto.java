@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReportSaveRequestDto {
-    //private Time walkTime;
     private String mode;
     private Double avgSpeed;
     private Double topSpeed;
@@ -16,7 +15,6 @@ public class ReportSaveRequestDto {
     @Builder
     public Report toEntity(){
         return Report.builder()
-                //.walkTime(walkTime)
                 .mode(mode)
                 .avgSpeed(avgSpeed)
                 .topSpeed(topSpeed)

@@ -14,6 +14,8 @@ public class UserSaveDto {
 
     private String email;
 
+    private String phoneNumber;
+
     private Role role;
 
     @Builder
@@ -21,6 +23,7 @@ public class UserSaveDto {
         return User.userDetailRegister()
                 .username(username)
                 .password(password)
+                .phoneNumber(phoneNumber)
                 .email(email)
                 .role(role)
                 .build();
