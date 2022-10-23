@@ -1,24 +1,23 @@
 package com.example.wakiserver.web;
 
 import com.example.wakiserver.auth.JwtTokenProvider;
-import com.example.wakiserver.auth.PrincipalDetails;
 import com.example.wakiserver.domain.user.Role;
 import com.example.wakiserver.domain.user.User;
-import com.example.wakiserver.domain.user.UserRepository;
 import com.example.wakiserver.response.ResponseException;
 import com.example.wakiserver.response.ResponseTemplate;
+import com.example.wakiserver.response.ResponseTemplateStatus;
 import com.example.wakiserver.service.UserService;
 import com.example.wakiserver.web.dto.UserLoginDto;
 import com.example.wakiserver.web.dto.UserResponseDto;
 import com.example.wakiserver.web.dto.UserSaveDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -30,8 +29,9 @@ public class UserController {
 
     @ApiOperation(value="회원 가입", notes="회원가입을 합니다. 반환값(data) : userIdx")
     @PostMapping("/join")
-    public ResponseTemplate<Long> join(@RequestBody UserSaveDto userSaveDto){
+    public ResponseTemplate<Long> join(@Valid @RequestBody UserSaveDto userSaveDto) throws ResponseException {
         return new ResponseTemplate<>(userService.join(userSaveDto));
+
     }
 
     @ApiOperation(value="로그인", notes="로그인을 합니다. 반환값(data) : jwt 토큰")
@@ -61,6 +61,14 @@ public class UserController {
         String email = userService.getUserEmail();
         String result = userService.applyPoints(email, point);
         return new ResponseTemplate<>(result);
+    }
+
+    @ApiOperation(value = "이메일 중복 체크", notes = "이메일 중복 체크를 합니다. true:중복, false:중복X")
+    @GetMapping("/exists/{email}")
+    public ResponseTemplate<String> checkDuplicate(@PathVariable String email){
+        if(userService.CheckDuplicateEmail(email)){
+            return new ResponseTemplate<>(ResponseTemplateStatus.SAME_EMAIL);
+        } else return new ResponseTemplate<>("사용 가능한 이메일입니다.");
     }
 
 
