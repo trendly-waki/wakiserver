@@ -17,7 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.wakiserver.response.ResponseTemplateStatus.*;
 
@@ -31,7 +36,7 @@ public class UserService {
 
     private final ReportRepository reportRepository;
 
-    public Long join(UserSaveDto userSaveDto) throws ResponseStatusException {
+    public Long join(UserSaveDto userSaveDto) throws ResponseException {
         try{
             userSaveDto.setPassword(bCryptPasswordEncoder.encode(userSaveDto.getPassword()));
             userSaveDto.setRole(Role.ROLE_USER);
@@ -46,7 +51,7 @@ public class UserService {
         User user = userRepository.findByEmail(userLoginDto.getEmail())
                 .orElseThrow(() -> new ResponseException(NO_USER));
         if (!bCryptPasswordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
-            throw new ResponseException(INVALID_PWD);
+            throw new ResponseException(WRONG_PWD);
         }
         return user;
     }
@@ -80,5 +85,10 @@ public class UserService {
         user.applyPoint(point);
         return "적용이 완료되었습니다";
     }
+
+    public boolean CheckDuplicateEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
+
 
 }
